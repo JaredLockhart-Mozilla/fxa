@@ -10,6 +10,7 @@ import React, {
   useCallback,
   useEffect,
   ReactElement,
+  RefObject,
 } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -21,6 +22,9 @@ export type TextInputProps = {
   label: string;
   placeholder?: string;
   readerText?: string;
+  errorText?: string;
+  errorTooltipClass?: string;
+  inputRef?: RefObject<HTMLInputElement>;
   onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
   type?: 'text' | 'email' | 'tel' | 'number' | 'url' | 'password';
 };
@@ -34,6 +38,9 @@ export const TextInput = ({
   placeholder,
   onChange,
   readerText,
+  errorText,
+  errorTooltipClass,
+  inputRef,
   type = 'text',
 }: TextInputProps) => {
   const [focussed, setFocussed] = useState<boolean>(false);
@@ -69,7 +76,9 @@ export const TextInput = ({
 
   return (
     <div
-      className={`flex items-center rounded transition-all duration-100 ease-in-out border ${
+      className={`flex items-center rounded transition-all duration-100 ease-in-out border tooltip
+      ${errorText ? 'tooltip-showing' : ''}
+      ${
         focussed ? 'border-blue-400 shadow-input-blue-focus' : 'border-grey-200'
       } ${disabled ? 'border-grey-100 bg-grey-10' : 'bg-white'}`}
       data-testid="input-container"
@@ -92,6 +101,7 @@ export const TextInput = ({
           aria-describedby={readerText ? readerId : undefined}
           data-testid="input-field"
           onChange={textFieldChange}
+          ref={inputRef}
           {...{
             defaultValue,
             disabled,
@@ -105,6 +115,17 @@ export const TextInput = ({
       {readerText && (
         <span data-testid="input-srtext" className="sr-only" id={readerId}>
           {readerText}
+        </span>
+      )}
+      {errorText && (
+        <span
+          className={
+            errorTooltipClass
+              ? errorTooltipClass
+              : 'tooltip-text tooltip-showing bg-red-200 p-3 -mt-20 rounded text-sm'
+          }
+        >
+          {errorText}
         </span>
       )}
       {children}

@@ -11,6 +11,15 @@ storiesOf('Components|TextInput', module)
     <div className="p-10 max-w-lg">
       <div className="mb-3">
         <TextInput
+          label="Default label (with error tooltip)"
+          placeholder="Here's a suggestion"
+          type="text"
+          errorText="This is some error text"
+          readerText="This is additional information that screen readers can describe"
+        />
+      </div>
+      <div className="mb-3">
+        <TextInput
           label="Default label"
           placeholder="Here's a suggestion"
           type="text"

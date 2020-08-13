@@ -5,15 +5,14 @@
 import React from 'react';
 import { screen } from '@testing-library/react';
 import Security from '.';
-import { renderWithRouter } from '../../models/_mocks';
+import { renderWithRouter, MockedCache } from '../../models/_mocks';
 
 describe('Security', () => {
   it('renders "fresh load" <Security/> with correct content', async () => {
     renderWithRouter(
-      <Security
-        accountRecoveryKeyEnabled={false}
-        twoFactorAuthEnabled={false}
-      />
+      <MockedCache>
+        <Security twoFactorAuthEnabled={false} />
+      </MockedCache>
     );
 
     expect(await screen.findByText('Recovery key')).toBeTruthy;
@@ -25,7 +24,9 @@ describe('Security', () => {
 
   it('renders "enabled two factor" and "recovery key present" <Security/> with correct content', async () => {
     renderWithRouter(
-      <Security accountRecoveryKeyEnabled={true} twoFactorAuthEnabled={true} />
+      <MockedCache account={{ recoveryKey: true }}>
+        <Security twoFactorAuthEnabled={true} />
+      </MockedCache>
     );
 
     const result = await screen.findAllByText('Enabled');
